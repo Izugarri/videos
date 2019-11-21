@@ -1,3 +1,3 @@
 User-agent:*
 Disallow:
-sitemap: http://videos.videomusica.es/sitemap.xml
+sitemap: https://videos.videomusica.es/sitemap.xml
