@@ -4573,7 +4573,7 @@
     }
   }
 "scripts": {
-    "build": "[your existing build step]",
+    "build": "[videos]",
    "build:fab": "npm run build && npm run fab:compile",
    "fab:compile": "fab-static [gh-pages]"
   }
