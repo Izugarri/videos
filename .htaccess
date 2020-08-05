@@ -1,0 +1,4 @@
+RewriteEngine on
+<IfModule mod_rewrite.c>
+ErrorDocument 404 http://videos.videomusica.es/paginadeerror.html
+</IfModule>
