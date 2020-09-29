@@ -6,7 +6,7 @@ stm_aix("p1i0","p0i0",[0,"A","","",-1,-1,0,"","_self","","","","",0,0,0,"d7arrow
 stm_bpx("p2","p1",[1,2,0,0,0,3,0,0]);
 stm_aix("p2i0","p0i0",[0,"Aaron Neville","","",-1,-1,0,"Aaron.Neville.html","_self","","","","",0,0,0,"","",0,0,0,0,1,"#B0DFFF",0,"#C7E9FF",0,"","",3,3,0,0,"#FFFFFF","#FFFFFF","#52A96C"]);
 stm_aix("p2i1","p2i0",[0,"Abba","","",-1,-1,0,"Abba.html"]);
-stm_aix("p2i2","p2i0",[0,"Al green","","",-1,-1,0,"Al.Green.html"]);
+stm_aix("p2i2","p2i0",[0,"Al Green","","",-1,-1,0,"Al.Green.html"]);
 stm_aix("p2i3","p2i0",[0,"Al Jarreau","","",-1,-1,0,"Al.Jarreau.html"]);
 stm_aix("p2i4","p2i0",[0,"Amaral","","",-1,-1,0,"Amaral.html"]);
 stm_aix("p2i5","p2i0",[0,"Ana Belén","","",-1,-1,0,"Ana.Belen.html"]);
@@ -61,6 +61,7 @@ stm_aix("p11i0","p2i0",[0,"Jamiroquai","","",-1,-1,0,"Jamiroquai.html"]);
 stm_aix("p11i1","p2i0",[0,"José Feliciano","","",-1,-1,0,"Jose.Feliciano.html"]);
 stm_aix("p11i2","p2i0",[0,"Joss Stone","","",-1,-1,0,"Joss.Stone.html"]);
 stm_aix("p11i3","p2i0",[0,"Juan Luis Guerra","","",-1,-1,0,"Juan.Luis.Guerra.html"]);
+stm_aix("p11i4","p2i0",[0,"Julio Iglesias","","",-1,-1,0,"Julio.Iglesias.html"]);
 stm_ep();
 stm_ep();
 stm_aix("p0i2","p1i0",[0,"K-O"]);
