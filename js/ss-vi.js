@@ -582,7 +582,7 @@ function MT(){
 		t="";
 	}
  }
- t='La búsqueda para "<b> '+ss+'</b>".<p>\n';
+ t='<font color="#ffffff">La búsqueda para</font> "<font color="#00FFFF"><b> '+ss+'</b></font>".<p>\n';
  for(n=0;;++n){
 	var m=0,im=-1;
 	for(i=0;i<FN;++i) if(AR[i]>m) m=AR[im=i];
