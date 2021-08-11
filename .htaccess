@@ -1,4 +1,7 @@
-RewriteEngine on
+RewriteEngine On
 <IfModule mod_rewrite.c>
-ErrorDocument 404 http://videos.videomusica.es/paginadeerror.html
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html
+ErrorDocument 404 https://videos.videomusica.es/paginadeerror.html
 </IfModule>
