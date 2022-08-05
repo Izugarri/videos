@@ -1,6 +1,6 @@
 FROM nginxinc/nginx-unprivileged:stable-alpine 
 
-COPY / /usr/share/nginx/
+COPY Control /usr/share/nginx/Control
 
 EXPOSE 8080
 
