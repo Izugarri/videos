@@ -1,5 +1,5 @@
 FROM nginxinc/nginx-unprivileged:stable-alpine 
-COPY Control /usr/share/nginx/Control
+COPY  /usr/share/nginx/
 EXPOSE 8080
 USER 101
 CMD nginx -g 'daemon off;'
