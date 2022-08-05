@@ -1,9 +1,9 @@
-FROM jc21/nginx-proxy-manager:latest
+FROM nginxinc/nginx-unprivileged:stable-alpine 
 
-EXPOSE 80
-EXPOSE 81
-EXPOSE 443
+COPY / /usr/share/nginx/html
 
-#    volumes:
-#      - ./data:/data
-#      - ./letsencrypt:/etc/letsencrypt
+EXPOSE 8080
+
+USER 101
+
+CMD nginx -g 'daemon off;'
