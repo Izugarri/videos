@@ -13,6 +13,6 @@ func main() {
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
-	http.Handle("/", http.FileServer(http.Dir("public")))
+	http.Handle("/", http.FileServer(http.Dir("/")))
 	http.ListenAndServe(":"+port, nil)
 }
