@@ -1,34 +1,21 @@
-const express = require('express')
-const path = require("path");
-const app = express()
-
-// #############################################################################
-// Logs all request paths and method
-app.use(function (req, res, next) {
-  res.set('x-timestamp', Date.now())
-  res.set('x-powered-by', 'cycliceee.sh')
-  console.log(`[${new Date().toISOString()}] ${req.ip} ${req.method} ${req.path}`);
-  next();
-});
-
-// #############################################################################
-
-app.use(express.static(__dirname+'/'))
-
-// #############################################################################
-// Catch all handler for all other request.
-app.use('*', (req,res) => {
-  res.json({
-      at: new Date().toISOString(),
-      method: req.method,
-      hostname: req.hostname,
-      ip: req.ip,
-      query: req.query,
-      headers: req.headers,
-      cookies: req.cookies,
-      params: req.params
-    })
-    .end()
-})
-
-module.exports = app
+{
+  "name": "starter-s3-storage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "env-cmd nodemon ."
+  },
+  "keywords": [],
+  "author": "Kam Lasater <kam.lasater@cyclic.sh>",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1141.0",
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0",
+    "nodemon": "^2.0.16"
+  }
+}
