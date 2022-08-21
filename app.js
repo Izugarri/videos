@@ -6,7 +6,7 @@ const app = express()
 // Logs all request paths and method
 app.use(function (req, res, next) {
   res.set('x-timestamp', Date.now())
-  res.set('x-powered-by', 'cyclic.sh')
+  res.set('x-powered-by', 'cycliceee.sh')
   console.log(`[${new Date().toISOString()}] ${req.ip} ${req.method} ${req.path}`);
   next();
 });
@@ -22,7 +22,7 @@ var options = {
   maxAge: '1m',
   redirect: false
 }
-app.use(express.static(__dirname+'/'));
+app.use(express.static('public', options))
 
 // #############################################################################
 // Catch all handler for all other request.
