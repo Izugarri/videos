@@ -12,17 +12,8 @@ app.use(function (req, res, next) {
 });
 
 // #############################################################################
-// This configures static hosting for files in /public that have the extensions
-// listed in the array.
-var options = {
-  dotfiles: 'ignore',
-  etag: false,
-  extensions: ['htm', 'html','css','js','ico','jpg','jpeg','png','svg'],
-  index: ['index.html'],
-  maxAge: '1m',
-  redirect: false
-}
-app.use(express.static('public', options))
+
+app.use(express.static(__dirname+'/'))
 
 // #############################################################################
 // Catch all handler for all other request.
