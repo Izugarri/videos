@@ -12,7 +12,7 @@ app.use(function (req, res, next) {
 });
 
 // #############################################################################
-// This configures static hosting for files in /public that have the extensions
+// This configures static hosting for files in /public (para raiz './')that have the extensions
 // listed in the array.
 var options = {
   dotfiles: 'ignore',
