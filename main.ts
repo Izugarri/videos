@@ -1,10 +1,9 @@
-import { serve } from "./deps.ts";
+import express from "npm:express@4.18.2";
 
-const PORT = 1993;
-const s = serve(`0.0.0.0:${PORT}`);
-const body = new TextEncoder().encode("Hello World\n");
+const app = express();
 
-console.log(`Server started on port ${PORT}`);
-for await (const req of s) {
-  req.respond({ body });
-}
+app.get("/", (req, res) => {
+  res.send("Welcome to the Dinosaur API!");
+});
+
+app.listen(8000);
