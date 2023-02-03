@@ -1,27 +1,21 @@
 {
-  "name": "express-hello-world",
-  "version": "1.0.0",
-  "description": "Expressjs Hello World example to provide faster start deploying on Cyclic platform",
+  "name": "nextjs-hello-world",
+  "version": "0.1.0",
   "main": "server.js",
   "scripts": {
-    "serve": "nodemon --watch . server.js",
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "next build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cyclic-software/express-hello-world.git"
-  },
-  "author": "Cyclic Software",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/cyclic-software/express-hello-world/issues"
-  },
-  "homepage": "https://github.com/cyclic-software/express-hello-world#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "next": "11.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "eslint": "7.32.0",
+    "eslint-config-next": "11.1.2"
   }
 }
