@@ -2,7 +2,7 @@ const next = require('next')
 const http = require('http')
 
 // init next
-const app = next(__dirname+'/')
+const app = next(__dirname)
 const handle = app.getRequestHandler()
 
 // init normal http server
