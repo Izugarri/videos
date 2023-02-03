@@ -14,7 +14,8 @@ var options = {
   maxAge: '1m',
   redirect: false
 }
-app.use(express.static('build', options))
+
+app.use(express.static('build', __dirname+'/'))
 
 const port = process.env.PORT || 3000
 
