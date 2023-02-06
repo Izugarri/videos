@@ -1,6 +1,8 @@
-const app = require('./app')
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
 
-const port = process.env.PORT || 3000
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+app.use(express.static(__dirname+'/'));
+app.set('x-powered-by', false);
+app.listen(port, () => { console.log(`Escuchando en http://localhost:${port}`)
 })
