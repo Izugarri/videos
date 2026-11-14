@@ -368,7 +368,7 @@ BASE (MOBILE) SIZE
 
 /* typography */
 body{
-	background: #ffffff url() no-repeat center center fixed;
+	background: #ffffff url(//videos.videomusica.es/images/musica.jpg) no-repeat center center fixed;
 	color:#FFFFFF;
 	font-family:'Ubuntu', Arial, Helvetica, sans-serif; 
 	font-size:1em;
@@ -445,7 +445,6 @@ div.youtube-play:hover{
    left: 0; 
 }
 
-img[src*="https://www.freewebhostingarea.com/images/poweredby.png"] { display: none;}
 
 /* links */
 /* links */

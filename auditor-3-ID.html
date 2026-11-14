@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Auditor de Videos data-id YouTube</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 960px; margin: 30px auto; padding: 0 20px; background: #121212; color: #f0f0f0; }
+    h1 { color: #ff4444; margin-bottom: 5px; }
+    p.sub { color: #aaa; margin-top: 0; margin-bottom: 25px; }
+    .panel { background: #1e1e1e; padding: 20px; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px; }
+    input { background: #2c2c2c; padding: 12px; border-radius: 6px; color: #fff; cursor: pointer; width: 100%; box-sizing: border-box; }
+    #progreso { margin-top: 15px; font-weight: bold; color: #00e5ff; font-size: 1.05em; }
+    .btn-excel { display: none; margin-top: 15px; padding: 12px 20px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1em; font-weight: bold; }
+    .btn-excel:hover { background: #218838; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e1e1e; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+    th { background: #2a2a2a; color: #00e5ff; }
+    tr:hover { background: #252525; }
+    code { background: #2c2c2c; padding: 3px 6px; border-radius: 4px; color: #ff8a80; }
+    a { color: #4fc3f7; text-decoration: none; font-weight: bold; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <h1>Buscador de Videos data-id Caídos (YouTube)</h1>
+  <p class="sub">Extrae todos los bloques <code>data-id="ID"</code> de tus páginas HTML y comprueba si fallan.</p>
+
+  <div class="panel">
+    <p><strong>1. Selecciona la carpeta principal de tu web:</strong></p>
+    <input type="file" id="carpetaWeb" webkitdirectory directory multiple>
+    <div id="progreso">Esperando carpeta...</div>
+    <button id="btnDescargar" class="btn-excel">Descargar listado de fallos para Excel (.CSV)</button>
+  </div>
+
+  <table id="tablaFallos" style="display:none;">
+    <thead>
+      <tr>
+        <th>Archivo HTML</th>
+        <th>Posición</th>
+        <th>data-id</th>
+        <th>Estado en YouTube</th>
+        <th>Comprobación</th>
+      </tr>
+    </thead>
+    <tbody id="listaFallos"></tbody>
+  </table>
+
+  <script>
+    var inputCarpeta = document.getElementById('carpetaWeb');
+    var progreso = document.getElementById('progreso');
+    var tabla = document.getElementById('tablaFallos');
+    var tbody = document.getElementById('listaFallos');
+    var btnDescargar = document.getElementById('btnDescargar');
+    var registrosRotos = new Array();
+
+    var SLASH = String.fromCharCode(47);
+    var COLON = String.fromCharCode(58);
+    var QUOTE = String.fromCharCode(34);
+    var SQUOTE = String.fromCharCode(39);
+    var QMARK = String.fromCharCode(63);
+    var AMP = String.fromCharCode(38);
+    var EQ = String.fromCharCode(61);
+
+    function crearUrlVideo(id) {
+      return 'https' + COLON + SLASH + SLASH + 'youtu.be' + SLASH + encodeURIComponent(id);
+    }
+
+    function esperar(ms) {
+      return new Promise(function(resolve) {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    // Extrae todos los valores de data-id="..." (con o sin espacios alrededor del =)
+    function extraerDataIds(htmlTexto) {
+      var encontrados = new Array();
+      var textoMinus = htmlTexto.toLowerCase();
+      var cursor = 0;
+
+      while (true) {
+        var pos = textoMinus.indexOf('data-id', cursor);
+        if (pos === -1) {
+          break;
+        }
+
+        var resto = htmlTexto.substring(pos + 7).trim();
+        if (resto.charAt(0) === EQ) {
+          var despuesIgual = resto.substring(1).trim();
+          var comilla = despuesIgual.charAt(0);
+
+          if (comilla === QUOTE || comilla === SQUOTE) {
+            var sinPrimeraComilla = despuesIgual.substring(1);
+            var finComilla = sinPrimeraComilla.indexOf(comilla);
+            if (finComilla > 0) {
+              var idLimpio = sinPrimeraComilla.substring(0, finComilla).trim();
+              if (idLimpio.length > 0) {
+                encontrados.push(idLimpio);
+              }
+            }
+          }
+        }
+
+        cursor = pos + 7;
+      }
+      return encontrados;
+    }
+
+    inputCarpeta.addEventListener('change', async function(evento) {
+      var listaBruta = Array.from(evento.target.files);
+      var archivos = listaBruta.filter(function(f) {
+        var nombre = f.name.toLowerCase();
+        return nombre.endsWith('.html') || nombre.endsWith('.htm');
+      });
+
+      tbody.innerHTML = '';
+      registrosRotos = new Array();
+      tabla.style.display = 'none';
+      btnDescargar.style.display = 'none';
+
+      if (archivos.length === 0) {
+        progreso.textContent = 'No se encontraron archivos .html en la carpeta seleccionada.';
+        return;
+      }
+
+      var totalArchivos = archivos.length;
+      var archivosAnalizados = 0;
+      var videosRevisados = 0;
+
+      for (var archivo of archivos) {
+        archivosAnalizados++;
+        var contenidoHtml = await archivo.text();
+        var rutaArchivo = archivo.webkitRelativePath || archivo.name;
+
+        var listaIds = extraerDataIds(contenidoHtml);
+        var totalEnPagina = listaIds.length;
+        var contadorEnPagina = 0;
+
+        for (var videoId of listaIds) {
+          contadorEnPagina++;
+          videosRevisados++;
+          progreso.textContent = 'Archivo ' + archivosAnalizados + ' de ' + totalArchivos + ' | Videos data-id comprobados: ' + videosRevisados + ' | Con fallos: ' + registrosRotos.length;
+
+          var estado = await comprobarVideo(videoId);
+
+          if (!estado.valido) {
+            var posicionTexto = 'Video #' + contadorEnPagina + ' (de ' + totalEnPagina + ')';
+            registrosRotos.push({
+              archivo: rutaArchivo,
+              posicion: posicionTexto,
+              id: videoId,
+              motivo: estado.motivo
+            });
+
+            tabla.style.display = 'table';
+            var fila = document.createElement('tr');
+            var urlDirecta = crearUrlVideo(videoId);
+
+            fila.innerHTML =
+              '<td>' + rutaArchivo + '</td>' +
+              '<td>' + posicionTexto + '</td>' +
+              '<td><code>' + videoId + '</code></td>' +
+              '<td>' + estado.motivo + '</td>' +
+              '<td><a href="' + urlDirecta + '" target="_blank" rel="noopener">Abrir en YouTube</a></td>';
+
+            tbody.appendChild(fila);
+          }
+
+          await esperar(150);
+        }
+      }
+
+      if (registrosRotos.length > 0) {
+        progreso.innerHTML = 'Finalizado. Se comprobaron <strong>' + videosRevisados + '</strong> videos data-id y fallan <strong>' + registrosRotos.length + '</strong>.';
+        btnDescargar.style.display = 'inline-block';
+      } else {
+        progreso.innerHTML = 'Finalizado. Se comprobaron <strong>' + videosRevisados + '</strong> videos data-id y todos funcionan correctamente.';
+      }
+    });
+
+    async function comprobarVideo(id) {
+      var urlVideo = crearUrlVideo(id);
+      
+      // 1. Consulta directa a YouTube oEmbed
+      var urlOembed = 'https' + COLON + SLASH + SLASH + '://youtube.com' + SLASH + 'oembed' + QMARK + 'url' + EQ + encodeURIComponent(urlVideo) + AMP + 'format' + EQ + 'json';
+      
+      try {
+        var respuesta = await fetch(urlOembed);
+        if (respuesta.ok) {
+          return { valido: true };
+        }
+        if (respuesta.status === 404) {
+          return { valido: false, motivo: 'Eliminado o Privado (404)' };
+        }
+        if (respuesta.status === 401 || respuesta.status === 403) {
+          return { valido: false, motivo: 'Inserción bloqueada en webs (' + respuesta.status + ')' };
+        }
+      } catch (e) {
+        // Si el navegador bloquea la petición directa en local, usamos el puente oficial noembed
+      }
+
+      // 2. Consulta mediante noembed.com (admite peticiones locales sin bloqueo CORS)
+      var urlNoembed = 'https' + COLON + SLASH + SLASH + 'noembed.com' + SLASH + 'embed' + QMARK + 'url' + EQ + encodeURIComponent(urlVideo);
+      try {
+        var resPuente = await fetch(urlNoembed);
+        var datos = await resPuente.json();
+        if (datos.error) {
+          return { valido: false, motivo: 'Eliminado, Privado o Bloqueado' };
+        }
+        return { valido: true };
+      } catch (err) {
+        return { valido: false, motivo: 'Error al verificar conexión' };
+      }
+    }
+
+    btnDescargar.addEventListener('click', function() {
+      var contenidoCsv = 'Archivo_HTML;Posicion_en_Pagina;Video_ID;Motivo;URL_YouTube\n';
+      registrosRotos.forEach(function(item) {
+        contenidoCsv += '"' + item.archivo + '";"' + item.posicion + '";"' + item.id + '";"' + item.motivo + '";"' + crearUrlVideo(item.id) + '"\n';
+      });
+
+      var blob = new Blob([contenidoCsv], { type: 'text/csv;charset=utf-8;' });
+      var enlace = document.createElement('a');
+      enlace.href = URL.createObjectURL(blob);
+      enlace.download = 'videos-data-id-fallidos.csv';
+      enlace.click();
+    });
+  </script>
+</body>
+</html>
